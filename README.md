@@ -20,6 +20,6 @@ Each program directory contains its own Makefile. To build a program, navigate t
 cd <directory-name>
 make        # Build the program
 make view   # View the hexdump
-make run    # Run in emulator
+make run    # Run in Apple I emulator
 ```
 
