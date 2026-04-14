@@ -120,12 +120,11 @@ Current file: hello.asm
 000015r 1  20 EF FF       jsr ECHO            ; Write char to output device
 000018r 1               
 000018r 1               Done:
-000018r 1  A9 80          lda #$80
-00001Ar 1  4C 00 FF       jmp MONRST    ; Jump back to Wozmon
-00001Dr 1               
-00001Dr 1               ; Message
-00001Dr 1               Message:
-00001Dr 1  48 45 4C 4C    .asciiz "HELLO, APPLE I!"
-000021r 1  4F 2C 20 41  
-000025r 1  50 50 4C 45  
-00002Cr 1               
+000018r 1  4C 00 FF       jmp MONRST    ; Jump back to Wozmon
+00001Br 1               
+00001Br 1               ; Message
+00001Br 1               Message:
+00001Br 1  48 45 4C 4C    .asciiz "HELLO, APPLE I!"
+00001Fr 1  4F 2C 20 41  
+000023r 1  50 50 4C 45  
+00002Ar 1               
