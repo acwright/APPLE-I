@@ -11,7 +11,7 @@ Each program directory contains its own Makefile. To build a program, navigate t
 
 - `make` or `make all` - Build the program
 - `make view` - Display hexdump of the built program
-- `make run` - Run the program in the Apple I emulator
+- `make woz` - Convert the output to Wozmon compatible format
 - `make clean` - Remove build artifacts
 
 ### Example 
@@ -20,6 +20,6 @@ Each program directory contains its own Makefile. To build a program, navigate t
 cd <directory-name>
 make        # Build the program
 make view   # View the hexdump
-make run    # Run in Apple I emulator
+make woz    # Convert the output to Wozmon compatible format
 ```
 
