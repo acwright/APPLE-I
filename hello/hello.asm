@@ -22,7 +22,7 @@ Print:
   jsr ECHO            ; Write char to output device
 
 Done:
-  jmp MONRST    ; Jump back to Wozmon
+  jmp MONRST          ; Jump back to Wozmon
 
 ; Message
 Message:
