@@ -1,0 +1,131 @@
+ca65 V2.19 - Git 0fca83500
+Main file   : hello.asm
+Current file: hello.asm
+
+000000r 1               ;-----------------------;
+000000r 1               ; Apple I Hello, World! ;
+000000r 1               ;-----------------------;
+000000r 1               
+000000r 1               .include "../apple1.inc"
+000000r 2               ;=============================================================
+000000r 2               ; apple1.inc — Apple 1 Definitions for ca65
+000000r 2               ;=============================================================
+000000r 2               
+000000r 2               ;-------------------------------------------------------------
+000000r 2               ; PIA (Motorola 6821) I/O Registers
+000000r 2               ;-------------------------------------------------------------
+000000r 2               KBD         = $D010     ; Keyboard data — bit 7 set when key latched
+000000r 2               KBDCR       = $D011     ; Keyboard control — bit 7 = new key ready
+000000r 2               DSP         = $D012     ; Display data — write ASCII char here
+000000r 2               DSPCR       = $D013     ; Display control
+000000r 2               
+000000r 2               ;-------------------------------------------------------------
+000000r 2               ; Woz Monitor ROM Entry Points  ($FF00–$FFFF)
+000000r 2               ;-------------------------------------------------------------
+000000r 2               MONRST      = $FF00     ; Cold-start / re-enter Woz Monitor
+000000r 2               ECHO        = $FFEF     ; Print char in A (7-bit ASCII) to display
+000000r 2               
+000000r 2               ;-------------------------------------------------------------
+000000r 2               ; Woz Monitor Zero Page  ($24–$2B reserved by monitor)
+000000r 2               ;-------------------------------------------------------------
+000000r 2               XAML        = $24       ; "Examine" address, low byte
+000000r 2               XAMH        = $25       ; "Examine" address, high byte
+000000r 2               STL         = $26       ; Store address, low byte
+000000r 2               STH         = $27       ; Store address, high byte
+000000r 2               HEXL        = $28       ; Hex value buffer, low byte
+000000r 2               HEXH        = $29       ; Hex value buffer, high byte
+000000r 2               YSAV        = $2A       ; Y register save (used by monitor)
+000000r 2               MODE        = $2B       ; Monitor mode: $00=XAM, $7F=STORE, $AE=BLOCK XAM
+000000r 2               
+000000r 2               ;-------------------------------------------------------------
+000000r 2               ; Memory Map
+000000r 2               ;-------------------------------------------------------------
+000000r 2               ZP          = $0000     ; Zero page start
+000000r 2               STACK       = $0100     ; 6502 hardware stack ($0100–$01FF)
+000000r 2               MON_IN      = $0200     ; Woz Monitor input buffer ($0200–$027F)
+000000r 2               USER_RAM    = $0280     ; First byte available to user programs
+000000r 2               IO_BASE     = $D010     ; Start of I/O address space
+000000r 2               ROM_BASE    = $FF00     ; Start of Woz Monitor ROM
+000000r 2               
+000000r 2               ;-------------------------------------------------------------
+000000r 2               ; ASCII Control Characters
+000000r 2               ;-------------------------------------------------------------
+000000r 2               BS          = $08       ; Backspace
+000000r 2               CR          = $0D       ; Carriage return (newline on Apple 1)
+000000r 2               ESC         = $1B       ; Escape
+000000r 2               
+000000r 2               ;-------------------------------------------------------------
+000000r 2               ; Macro: PUTC  — print a literal character
+000000r 2               ;   PUTC 'A'
+000000r 2               ;-------------------------------------------------------------
+000000r 2               .macro PUTC char
+000000r 2                   lda  #char
+000000r 2                   jsr  ECHO
+000000r 2               .endmacro
+000000r 2               
+000000r 2               ;-------------------------------------------------------------
+000000r 2               ; Macro: NEWLINE  — print a carriage return
+000000r 2               ;-------------------------------------------------------------
+000000r 2               .macro NEWLINE
+000000r 2                   lda  #CR
+000000r 2                   jsr  ECHO
+000000r 2               .endmacro
+000000r 2               
+000000r 2               ;-------------------------------------------------------------
+000000r 2               ; Macro: PUTS  — print a null-terminated string by address
+000000r 2               ;   PUTS my_string
+000000r 2               ;   Clobbers: A, Y
+000000r 2               ;-------------------------------------------------------------
+000000r 2               .macro PUTS addr
+000000r 2                   .local @loop, @done
+000000r 2                   ldy  #$00
+000000r 2               @loop:
+000000r 2                   lda  addr,y
+000000r 2                   beq  @done
+000000r 2                   jsr  ECHO
+000000r 2                   iny
+000000r 2                   bne  @loop
+000000r 2               @done:
+000000r 2               .endmacro
+000000r 2               
+000000r 2               ;-------------------------------------------------------------
+000000r 2               ; Macro: GETKEY  — wait for a keypress, result in A (7-bit)
+000000r 2               ;   Clobbers: A
+000000r 2               ;-------------------------------------------------------------
+000000r 2               .macro GETKEY
+000000r 2                   .local @wait
+000000r 2               @wait:
+000000r 2                   lda  KBDCR
+000000r 2                   bpl  @wait          ; loop until bit 7 set (key ready)
+000000r 2                   lda  KBD            ; read key (bit 7 is set by hardware)
+000000r 2                   and  #$7F           ; strip bit 7 → standard 7-bit ASCII
+000000r 2               .endmacro
+000000r 2               
+000000r 1               .segment "CODE"
+000000r 1               
+000000r 1               ; Start
+000000r 1               Start:
+000000r 1  A9 0D          lda #$0D            ; CR
+000002r 1  20 EF FF       jsr ECHO            ; Write char to output device
+000005r 1               
+000005r 1  A2 00          ldx #0
+000007r 1               Print:
+000007r 1  BD rr rr       lda Message,x
+00000Ar 1  F0 07          beq @PrintEnd
+00000Cr 1  20 EF FF       jsr ECHO            ; Write char to output device
+00000Fr 1  E8             inx
+000010r 1  4C rr rr       jmp Print
+000013r 1               @PrintEnd:
+000013r 1  A9 0D          lda #$0D            ; CR
+000015r 1  20 EF FF       jsr ECHO            ; Write char to output device
+000018r 1               
+000018r 1               Done:
+000018r 1  A9 80          lda #$80
+00001Ar 1  4C 00 FF       jmp MONRST    ; Jump back to Wozmon
+00001Dr 1               
+00001Dr 1               ; Message
+00001Dr 1               Message:
+00001Dr 1  48 45 4C 4C    .asciiz "HELLO, APPLE I!"
+000021r 1  4F 2C 20 41  
+000025r 1  50 50 4C 45  
+00002Cr 1               
