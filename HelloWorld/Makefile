@@ -1,5 +1,5 @@
-TARGET = helloworld
-CONFIG = apple1
+TARGET = HelloWorld
+CONFIG = Apple1
 
 .PHONY: all clean
 

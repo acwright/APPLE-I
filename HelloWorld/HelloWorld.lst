@@ -1,12 +1,12 @@
 ca65 V2.19 - Git 547d92358
-Main file   : helloworld.asm
-Current file: helloworld.asm
+Main file   : HelloWorld.asm
+Current file: HelloWorld.asm
 
 000000r 1               ;-----------------------;
 000000r 1               ; Apple I Hello, World! ;
 000000r 1               ;-----------------------;
 000000r 1               
-000000r 1               .include "../apple1.inc"
+000000r 1               .include "../Apple1.inc"
 000000r 2               ;=============================================================
 000000r 2               ; apple1.inc — Apple 1 Definitions for ca65
 000000r 2               ;=============================================================

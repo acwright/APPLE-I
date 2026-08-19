@@ -2,7 +2,7 @@
 ; Apple I Hello, World! ;
 ;-----------------------;
 
-.include "../apple1.inc"
+.include "../Apple1.inc"
 .segment "CODE"
  
 ; Start
