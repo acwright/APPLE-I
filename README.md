@@ -23,3 +23,14 @@ make view   # View the hexdump
 make woz    # Convert the output to Wozmon compatible format
 ```
 
+## Building All Programs
+
+A root-level Makefile delegates to each subproject's own Makefile, so you can build or clean every program at once from the repo root.
+
+```bash
+make        # Build all programs
+make clean  # Clean all programs
+```
+
+To add a new project, drop a directory with its own Makefile at the top level; it will be picked up automatically.
+
